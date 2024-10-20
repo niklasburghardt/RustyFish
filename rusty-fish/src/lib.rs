@@ -1,4 +1,8 @@
+mod engine;
+
 use wasm_bindgen::prelude::*;
+use crate::engine::board::Board;
+use crate::engine::piece::{Color, Piece};
 
 #[wasm_bindgen]
 pub fn add(left: i32, right: i32) -> i32 {
@@ -15,9 +19,13 @@ extern {
     fn alert(s: &str);
 }
 
+pub fn test_struct() -> bool{
+    let b = Board {first: Piece::Pawn(Color::Black)};
+    true
+}
 #[wasm_bindgen]
 pub fn greet() {
-    alert("This comes straight from Rust");
+    alert("This comes straight from Rust 2");
 }
 
 #[cfg(test)]

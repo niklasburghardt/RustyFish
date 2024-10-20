@@ -7,6 +7,7 @@ import Game from "./pages/Game";
 function App() {
   const [ans, setAns] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  
 
   useEffect(() => {
     init().then(() => {
