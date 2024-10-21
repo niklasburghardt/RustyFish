@@ -1,34 +1,22 @@
-import React, { useState } from "react";
-import {add, mult, greet, find_largest_prime} from "rusty-fish";
+import React, {useState} from "react";
+import {add, mult, greet} from "rusty-fish";
 
 const Game = () => {
-  const [num1, setNum1] = React.useState(0);
-  const [num2, setNum2] = React.useState(0);
-  const [result, setResult] = React.useState(0);
-
-  const [finished, setFinished] = useState(true);
-
-  const countToBillion = () => {
-    console.log("Counting to a billion...");
-    let i = 0;
-    for (i = 0; i < 10_000_000_000; i++) {
-      i += 1;
-    }
-    console.log("Finished counting to a billion");
-  }
-
-  const findPrime = () => {
-    console.log("Finding largest prime...");
-    let prime = find_largest_prime(1_000_000);
-    console.log("Largest prime is: ", prime);
-  }
-
   return (
-    <div>
-      <button onClick={countToBillion}>Typescript</button>
-      <button onClick={findPrime}>Rust</button>
-      <button onClick={greet}>Greet</button>
-   </div>
+    <div className="w-full flex items-center justify-center pt-20">
+      <div className="grid grid-cols-8 gap-0 ">
+        {Array.from({length: 64}, (_, i) => (
+          <div
+            key={i}
+            className={`h-[10vh] w-[10vh] ${
+              i % 2 === Math.floor(i / 8) % 2 ? "bg-[#f4dcb4]" : "bg-[#b58863]"
+            }`}
+          >
+            <img src="/pieces/b-b.png" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
