@@ -1,4 +1,4 @@
-enum Flag {
+pub enum Flag {
     None,
     EP,
     CastleKing,
@@ -8,7 +8,7 @@ enum Flag {
     KingMove,
 }
 
-enum Promotion {
+pub enum Promotion {
     None,
     Knight,
     Bishop,
@@ -16,7 +16,7 @@ enum Promotion {
     Queen,
 }
 
-struct PieceMove {
+pub struct PieceMove {
     start: i8,
     end: i8,
     flag: Flag,

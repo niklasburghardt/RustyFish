@@ -1,4 +1,5 @@
 mod engine;
+mod utils;
 
 use wasm_bindgen::prelude::*;
 use crate::engine::board::Board;

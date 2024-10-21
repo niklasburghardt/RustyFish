@@ -1,9 +1,5 @@
-pub enum Color {
-    White = 0,
-    Black = 1,
-}
-
-pub enum Figure {
+pub enum Piece {
+    None,
     Pawn(Color),
     Knight(Color),
     Bishop(Color),
@@ -12,7 +8,15 @@ pub enum Figure {
     King(Color),
 }
 
-struct Piece {
-    figure: Figure,
-    color: Color,
+pub enum Color {
+    White = 8,
+    Black = 16,
+}
+
+pub fn is_color(piece: &Piece, color: Color) -> bool {
+    let p = Piece::Pawn(Color::Black);
+    match piece {
+        piece(c) if c == color => true,
+        _ => false,
+    }
 }
