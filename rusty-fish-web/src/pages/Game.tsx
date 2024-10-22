@@ -75,7 +75,9 @@ const Game = () => {
                   lastStart={lastStart === i}
                   lastEnd={lastEnd === i}
                 >
-                  {board[i] === "" ? null : <Piece id={i + 1} />}
+                  {board[i] === "" ? null : (
+                    <Piece id={i + 1} type={board[i]} />
+                  )}
                 </Square>
               </div>
             );

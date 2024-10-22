@@ -6,7 +6,7 @@ use crate::engine::piece::Piece;
 use crate::engine::piece_move::{Flag, PieceMove, Promotion};
 use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::prelude::*;
-use crate::engine::piece::Color::Black;
+use crate::engine::piece::Color::{Black, White};
 
 #[wasm_bindgen]
 pub fn add(left: i32, right: i32) -> i32 {
@@ -30,6 +30,7 @@ impl ChessEngine {
 
     pub fn init(&mut self) {
         self.board.squares[2] = Piece::Queen(Black);
+        self.board.squares[3] = Piece::Bishop(White);
     }
 
     pub fn make_move(&mut self, start: usize, end: usize) {
