@@ -9,6 +9,7 @@ const Game = () => {
   const [engine, setEngine] = useState<ChessEngine | null>(null);
   const [lastStart, setLastStart] = useState<number | null>(null);
   const [lastEnd, setLastEnd] = useState<number | null>(null);
+  const [activePiece, setActivePiece] = useState<number | null>(null);
 
   const [board, setBoard] = useState<Array<string>>([]);
 
@@ -41,11 +42,15 @@ const Game = () => {
   };
   function handleDragStart(event: any) {
     const {active} = event;
-    setLastStart(active.id - 1);
+    setActivePiece(active.id-1);
   }
-
+  
   function handleDragEnd(event: any) {
     const {active, over} = event;
+    if(!active || !over) return;
+    if(active.id -1 === over.id) return;
+    setActivePiece(null);
+    setLastStart(active.id - 1);
     setLastEnd(over ? over.id : null);
     // If the item is dropped over a container, set it as the parent
     // otherwise reset the parent to `null`
@@ -55,6 +60,7 @@ const Game = () => {
     console.log("BOARD");
     console.log(engine?.get_board());
     setParent(over ? over.id : null);
+
     board[over.id] === "" ? playMoveSound() : playCaptureSound();
   }
   return (
@@ -72,8 +78,9 @@ const Game = () => {
                   key={i}
                   x={x}
                   y={y}
-                  lastStart={lastStart === i}
+                  lastStart={activePiece === i || lastStart === i}
                   lastEnd={lastEnd === i}
+                  possible={activePiece !== null && i%5 == 0}
                 >
                   {board[i] === "" ? null : (
                     <Piece id={i + 1} type={board[i]} />
