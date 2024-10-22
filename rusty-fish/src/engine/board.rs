@@ -1,3 +1,4 @@
+use std::ptr::copy;
 use crate::engine::piece::{Color, Piece};
 use crate::engine::piece_move::{PieceMove};
 pub struct Board {
@@ -11,7 +12,20 @@ pub struct Board {
 }
 
 impl Board {
-    pub fn make_move(&self, piece_move: &PieceMove) {
-
+    pub fn new() -> Board {
+        Board {
+            squares: [Piece::None; 64],
+            moving_player: Color::White,
+            opponent_color: Color::Black,
+            friendly_color: Color::White,
+            attacked_squares: 0b000,
+            ray_squares: 0b000,
+        }
+    }
+    pub fn make_move(&mut self, piece_move: &PieceMove) {
+        let piece = self.squares[piece_move.start].clone();
+        self.squares[piece_move.start]  = Piece::None;
+        self.squares[piece_move.end]    = piece;
     }
 }
+

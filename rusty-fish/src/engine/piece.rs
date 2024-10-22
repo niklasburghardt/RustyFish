@@ -1,3 +1,5 @@
+#[derive(Clone)]
+#[derive(Copy)]
 pub enum Piece {
     None,
     Pawn(Color),
@@ -7,16 +9,11 @@ pub enum Piece {
     Queen(Color),
     King(Color),
 }
-
+#[derive(Clone)]
+#[derive(Copy)]
 pub enum Color {
     White = 8,
     Black = 16,
 }
 
-pub fn is_color(piece: &Piece, color: Color) -> bool {
-    let p = Piece::Pawn(Color::Black);
-    match piece {
-        piece(c) if c == color => true,
-        _ => false,
-    }
-}
+

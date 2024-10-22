@@ -1,7 +1,7 @@
 pub mod board;
 pub mod piece;
-mod piece_move;
-mod game;
+pub(crate) mod piece_move;
+pub mod game;
 
 
 

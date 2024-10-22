@@ -1,1 +1,1 @@
-mod board_representation;
+pub(crate) mod board_representation;

@@ -6,13 +6,15 @@ function Square({
   children,
   x,
   y,
+  id,
 }: {
   x: number;
   y: number;
   children: React.ReactNode;
+  id: number;
 }) {
   const {isOver, setNodeRef} = useDroppable({
-    id: `x${x}y${y}`,
+    id: id,
   });
 
   return (

@@ -17,8 +17,8 @@ pub enum Promotion {
 }
 
 pub struct PieceMove {
-    start: i8,
-    end: i8,
-    flag: Flag,
-    promotion: Promotion,
+    pub start: usize,
+    pub end: usize,
+    pub flag: Flag,
+    pub promotion: Promotion,
 }

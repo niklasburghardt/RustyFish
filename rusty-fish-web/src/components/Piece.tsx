@@ -1,9 +1,9 @@
 import {useDraggable} from "@dnd-kit/core";
 import React from "react";
 
-function Piece() {
+function Piece({id}: {id: number}) {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: "black-bishop",
+    id: id,
   });
   const style = transform
     ? {
