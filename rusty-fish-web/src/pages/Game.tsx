@@ -7,12 +7,10 @@ import {DndContext} from "@dnd-kit/core";
 const Game = () => {
   const [parent, setParent] = useState<any>(null);
   const [engine, setEngine] = useState<ChessEngine | null>(null);
+  const [lastStart, setLastStart] = useState<number | null>(null);
+  const [lastEnd, setLastEnd] = useState<number | null>(null);
 
   const [board, setBoard] = useState<Array<string>>([]);
-
-  const getBoard = () => {
-    setBoard(engine?.get_board() || []);
-  };
 
   useEffect(() => {
     const initEngine = async () => {
@@ -26,9 +24,29 @@ const Game = () => {
     initEngine();
   }, []);
 
+  const getBoard = () => {
+    setBoard(engine?.get_board() || []);
+  };
+
+  const playMoveSound = () => {
+    const audio = new Audio("/sounds/move-self.mp3");
+
+    audio.play();
+  };
+
+  const playCaptureSound = () => {
+    const audio = new Audio("/sounds/capture.mp3");
+
+    audio.play();
+  };
+  function handleDragStart(event: any) {
+    const {active} = event;
+    setLastStart(active.id - 1);
+  }
+
   function handleDragEnd(event: any) {
     const {active, over} = event;
-
+    setLastEnd(over ? over.id : null);
     // If the item is dropped over a container, set it as the parent
     // otherwise reset the parent to `null`
     console.log(event);
@@ -37,9 +55,10 @@ const Game = () => {
     console.log("BOARD");
     console.log(engine?.get_board());
     setParent(over ? over.id : null);
+    board[over.id] === "" ? playMoveSound() : playCaptureSound();
   }
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <div className="w-full flex items-center justify-center pt-20">
         <div className="w-[80vh] h-[80vh] grid grid-cols-8 gap-0 ">
           {Array.from({length: 64}).map((_, i) => {
@@ -48,7 +67,14 @@ const Game = () => {
             const y = Math.floor(i / 8);
             return (
               <div className="h-[10vh] w-[10vh]">
-                <Square id={i} key={i} x={x} y={y}>
+                <Square
+                  id={i}
+                  key={i}
+                  x={x}
+                  y={y}
+                  lastStart={lastStart === i}
+                  lastEnd={lastEnd === i}
+                >
                   {board[i] === "" ? null : <Piece id={i + 1} />}
                 </Square>
               </div>
