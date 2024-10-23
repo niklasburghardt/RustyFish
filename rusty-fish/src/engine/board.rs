@@ -22,10 +22,21 @@ impl Board {
             ray_squares: 0b000,
         }
     }
+
+
+
+    pub fn position_from_fen(fen: String) {
+        for char in fen {
+            
+
+        }
+    }
     pub fn make_move(&mut self, piece_move: &PieceMove) {
         let piece = self.squares[piece_move.start].clone();
         self.squares[piece_move.start]  = Piece::None;
         self.squares[piece_move.end]    = piece;
     }
+
+
 }
 

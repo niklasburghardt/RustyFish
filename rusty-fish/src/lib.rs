@@ -29,8 +29,7 @@ impl ChessEngine {
     }
 
     pub fn init(&mut self) {
-        self.board.squares[2] = Piece::Queen(Black);
-        self.board.squares[3] = Piece::Bishop(White);
+
     }
 
     pub fn make_move(&mut self, start: usize, end: usize) {

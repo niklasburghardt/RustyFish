@@ -2,7 +2,8 @@ import React, {useEffect, useState} from "react";
 import {add, greet, ChessEngine} from "rusty-fish";
 import Square from "../components/Square";
 import Piece from "../components/Piece";
-import {DndContext} from "@dnd-kit/core";
+import {DndContext, DragOverlay} from "@dnd-kit/core";
+import { snapCenterToCursor } from "@dnd-kit/modifiers";
 
 const Game = () => {
   const [parent, setParent] = useState<any>(null);
@@ -64,7 +65,7 @@ const Game = () => {
     board[over.id] === "" ? playMoveSound() : playCaptureSound();
   }
   return (
-    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+    <DndContext modifiers={[snapCenterToCursor]} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <div className="w-full flex items-center justify-center pt-20">
         <div className="w-[80vh] h-[80vh] grid grid-cols-8 gap-0 ">
           {Array.from({length: 64}).map((_, i) => {
@@ -86,6 +87,9 @@ const Game = () => {
                     <Piece id={i + 1} type={board[i]} />
                   )}
                 </Square>
+                <div className="relative z-0 bottom-[10vh] opacity-20 ">
+                  {activePiece === i ? (<img src={"/pieces/"+board[i]+".png"}/>) : null}
+                </div>
               </div>
             );
           })}
