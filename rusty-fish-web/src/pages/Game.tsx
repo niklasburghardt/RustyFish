@@ -99,7 +99,7 @@ const Game = () => {
 
   async function fromFen() {
     console.log("creating from fen");
-    await engine?.set_board_from_fen(
+    await engine?.set_board_from_fen(fenInput ||
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
     );
     console.log("success");
@@ -112,6 +112,7 @@ const Game = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
+      <input className="outline" value={fenInput} onChange={(e) => setFenInputs(e.target.value)} />
       <button onClick={fromFen}>From FEN</button>
       <button onClick={generateLegalMoves}>Generate Legal Moves</button>
       <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
