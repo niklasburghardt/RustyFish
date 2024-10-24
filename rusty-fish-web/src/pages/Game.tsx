@@ -45,6 +45,7 @@ const Game = () => {
   };
   function handleDragStart(event: any) {
     const {active} = event;
+    console.log("ACTIVE ID: " + active.id);
     setActivePiece(active.id-1);
   }
   
@@ -66,16 +67,16 @@ const Game = () => {
     // If the item is dropped over a container, set it as the parent
     // otherwise reset the parent to `null`
     console.log(event);
-    
-    if(active.id -1 === over.id) return;
-    engine?.make_move(active.id - 1, over.id);
-    getBoard();
+
     console.log("BOARD");
-    console.log(engine?.get_board());
     setParent(over ? over.id : null);
     setActivePiece(null);
-
+    
+    if(active.id -1 === over.id) return;
     board[over.id] === "" ? playMoveSound() : playCaptureSound();
+    engine?.make_move(active.id - 1, over.id);
+    getBoard();
+    console.log(engine?.get_board());
   }
 
   function handleSquareClick(id: number) {

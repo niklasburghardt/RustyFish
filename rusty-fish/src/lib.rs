@@ -29,7 +29,7 @@ impl ChessEngine {
     }
 
     pub fn init(&mut self) {
-        self.board.squares[2] = Piece::Pawn(Color::White);
+        self.start_position();
 
     }
 
