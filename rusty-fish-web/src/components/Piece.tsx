@@ -12,7 +12,7 @@ function Piece({id, type}: {id: number; type: string}) {
     : undefined;
 
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <button className="z-30" ref={setNodeRef} style={style} {...listeners} {...attributes}>
       <img src={"/pieces/" + type + ".png"} alt="Bishop" />
     </button>
   );

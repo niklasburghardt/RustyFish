@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {act, useEffect, useState} from "react";
 import {add, greet, ChessEngine} from "rusty-fish";
 import Square from "../components/Square";
 import Piece from "../components/Piece";
@@ -11,7 +11,7 @@ const Game = () => {
   const [lastStart, setLastStart] = useState<number | null>(null);
   const [lastEnd, setLastEnd] = useState<number | null>(null);
   const [activePiece, setActivePiece] = useState<number | null>(null);
-  const [alreadyActive, setAlreadyActive] = useState<number | null>(null);
+  const [alreadyActivePiece, setAlreadyActivePiece] = useState<number | null>(null);
 
   const [board, setBoard] = useState<Array<string>>([]);
   const [fenInput, setFenInputs] = useState<string>("");
@@ -51,6 +51,15 @@ const Game = () => {
   function handleDragEnd(event: any) {
     const {active, over} = event;
     if(!active || !over) return;
+    if(alreadyActivePiece == active.id-1) {
+      setActivePiece(null);
+      setAlreadyActivePiece(null);
+      return;
+    }
+
+    if(active.id-1 == activePiece) {
+      setAlreadyActivePiece(active.id-1);
+    }
     
     
     setLastEnd(over ? over.id : null);
@@ -118,9 +127,9 @@ const Game = () => {
                 <Piece id={i + 1} type={board[i]} />
               ) }
             </Square>
-            <div className="relative z-0 bottom-[10vh] opacity-20">
+            <div draggable={false} className="relative z-0 bottom-[10vh] opacity-20">
               {activePiece === i ? (
-                <img src={`/pieces/${board[i]}.png`} />
+                <img draggable={false} src={`/pieces/${board[i]}.png`} />
               ) : null}
             </div>
           </div>
