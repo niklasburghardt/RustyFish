@@ -39,7 +39,6 @@ function Square({
       {children}
       {possible && (
         <div className="z-50 w-full h-full flex items-center justify-center">
-          <div className="w-6 h-6 bg-emerald-600 bg-opacity-50 rounded-full "/>
         </div>
       )}
     </div>

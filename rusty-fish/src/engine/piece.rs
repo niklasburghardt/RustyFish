@@ -17,3 +17,10 @@ pub enum Color {
 }
 
 
+impl PartialEq for Piece {
+    fn eq(&self, other: &Self) -> bool {
+        self == other
+    }
+}
+
+
