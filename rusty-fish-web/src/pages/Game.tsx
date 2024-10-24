@@ -64,6 +64,7 @@ const Game = () => {
     console.log("BOARD");
     console.log(engine?.get_board());
     setParent(over ? over.id : null);
+    setActivePiece(null);
 
     board[over.id] === "" ? playMoveSound() : playCaptureSound();
   }
@@ -90,10 +91,10 @@ const Game = () => {
 
   return (
     <DndContext modifiers={[snapCenterToCursor]} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+      <button onClick={fromFen}>From FEN</button>
       <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
-        <input type="text" value={fenInput} onChange={(e) => setFenInputs(e.target.value)} />
-        <button onClick={() => fromFen()}>Set FEN</button>
-        <div className="w-[80vh] h-[80vh] flex flex-col-reverse">
+       
+        <div className=" w-[80vh] h-[80vh] flex flex-col-reverse">
   {Array.from({ length: 8 }).map((_, rowIndex) => (
     <div className="flex flex-row" key={rowIndex}>
       {Array.from({ length: 8 }).map((_, colIndex) => {
@@ -113,9 +114,9 @@ const Game = () => {
               lastEnd={lastEnd === i}
               possible={activePiece !== null && i % 5 === 0}
             >
-              {board[i] === "" ? null : (
+              {board[i] === "" ? null: (
                 <Piece id={i + 1} type={board[i]} />
-              )}
+              ) }
             </Square>
             <div className="relative z-0 bottom-[10vh] opacity-20">
               {activePiece === i ? (
@@ -129,7 +130,6 @@ const Game = () => {
   ))}
 </div>
 
-        <div></div>
       </div>
     </DndContext>
   );
