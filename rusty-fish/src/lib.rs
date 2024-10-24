@@ -7,7 +7,21 @@ use crate::engine::piece_move::{Flag, PieceMove, Promotion};
 use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::prelude::*;
 use crate::engine::piece::Color;
+use crate::engine::piece::Color::White;
 use crate::engine::position::position_from_fen;
+
+pub fn main () {
+    let mut c = ChessEngine::new();
+    c.init();
+    c.set_board_from_fen("rrrr");
+    let mut count = 0;
+    for piece in c.board.squares.iter() {
+        if *piece != Piece::None {
+            count += 1;
+        }
+    }
+    println!("Test successfull, {}", count)
+}
 
 #[wasm_bindgen]
 pub fn add(left: i32, right: i32) -> i32 {
@@ -29,12 +43,17 @@ impl ChessEngine {
     }
 
     pub fn init(&mut self) {
-        self.start_position();
+        self.board.init();
+        for i in 0..64 {
+            self.board.squares[i] = Piece::None;
+        }
+
 
     }
 
+
     pub fn make_move(&mut self, start: usize, end: usize) {
-        self.board.make_move(&PieceMove {start, end, flag: Flag::None, promotion: Promotion::None});
+        self.board.make_move(&PieceMove {start: start as u8, end: end as u8, flag: Flag::None, promotion: Promotion::None});
     }
 
     pub fn get_board(&self) -> Vec<String> {
@@ -45,8 +64,13 @@ impl ChessEngine {
         br
     }
 
+    pub fn generate_moves(&mut self) {
+        self.board.generate_moves();
+    }
+
     pub fn set_board_from_fen(&mut self, fen: &str) {
-        self.start_position();
+        let pos = position_from_fen(fen);
+        self.board.squares = pos.squares;
     }
 
     pub fn start_position(&mut self) {

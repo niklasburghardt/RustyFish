@@ -1,3 +1,5 @@
+use crate::engine::precomputed::Precomputed;
+
 pub enum Flag {
     None,
     EP,
@@ -17,8 +19,19 @@ pub enum Promotion {
 }
 
 pub struct PieceMove {
-    pub start: usize,
-    pub end: usize,
+    pub start: u8,
+    pub end: u8,
     pub flag: Flag,
     pub promotion: Promotion,
+}
+
+impl PieceMove {
+    pub fn simple(start: u8, end: u8) -> PieceMove {
+        PieceMove {
+            start,
+            end,
+            flag: Flag::None,
+            promotion: Promotion::None
+        }
+    }
 }

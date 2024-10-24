@@ -10,3 +10,6 @@ crate-type = ["cdylib"]
 [dependencies]
 wasm-bindgen = "0.2.78"
 
+[[bin]]
+name = "rusty-fish"
+path = "src/lib.rs"

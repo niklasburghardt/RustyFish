@@ -14,7 +14,7 @@ pub struct Position {
 }
 
 impl Position {
-    fn new() -> Position {
+    pub fn new() -> Position {
         Position {
             squares: [Piece::None; 64],
             white_castle_kingside: false,
@@ -29,7 +29,7 @@ impl Position {
 
 }
 
-pub fn position_from_fen(fen: &str) -> [Piece; 64] {
+pub fn position_from_fen(fen: &str) -> Position {
     let mut new_squares = [Piece::None; 64];
     let mut file = 0;
     let mut rank = 7;
@@ -61,8 +61,8 @@ pub fn position_from_fen(fen: &str) -> [Piece; 64] {
             };
 
             if piece != Piece::None {
-               // let index: usize = (rank * 8 + file) as usize;
-                new_squares[0] = piece;
+               let index: usize = (rank * 8 + file) as usize;
+                new_squares[index] = piece;
                 file += 1;
             } else {
                 // Handle invalid symbol (optional)
@@ -71,6 +71,10 @@ pub fn position_from_fen(fen: &str) -> [Piece; 64] {
         }
     }
 
-    new_squares
+    let mut newPos = Position::new();
+    newPos.squares = new_squares;
+
+    newPos
+
 }
 

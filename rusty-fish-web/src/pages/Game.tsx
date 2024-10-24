@@ -51,6 +51,10 @@ const Game = () => {
     setActivePiece(active.id - 1);
   }
 
+  function generateLegalMoves() {
+    engine?.generate_moves();
+  }
+
   function handleDragEnd(event: any) {
     const {active, over} = event;
     if (!active || !over) return;
@@ -109,6 +113,7 @@ const Game = () => {
       onDragStart={handleDragStart}
     >
       <button onClick={fromFen}>From FEN</button>
+      <button onClick={generateLegalMoves}>Generate Legal Moves</button>
       <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
         <div className=" w-[80vh] h-[80vh] flex flex-col-reverse">
           {Array.from({length: 8}).map((_, rowIndex) => (
