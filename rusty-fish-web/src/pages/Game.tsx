@@ -4,6 +4,8 @@ import Square from "../components/Square";
 import Piece from "../components/Piece";
 import {DndContext, DragOverlay} from "@dnd-kit/core";
 import {snapCenterToCursor} from "@dnd-kit/modifiers";
+import {Button} from "../components/shadcn/button";
+import {Input} from "../components/shadcn/input";
 
 const Game = () => {
   const [parent, setParent] = useState<any>(null);
@@ -129,59 +131,66 @@ const Game = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
-      <input
-        className="outline"
-        value={fenInput}
-        onChange={(e) => setFenInputs(e.target.value)}
-      />
-      <button onClick={fromFen}>From FEN</button>
-      <button onClick={generateLegalMoves}>Generate Legal Moves</button>
-      <button onClick={() => setSandbox(!sandbox)}>
-        {sandbox ? "Sandbox On" : "Sandbox off"}
-      </button>
-      <div className="text-center">{lmCount}</div>
-      <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
-        <div className=" w-[80vh] h-[80vh] flex flex-col-reverse cursor-pointer">
-          {Array.from({length: 8}).map((_, rowIndex) => (
-            <div className="flex flex-row" key={rowIndex}>
-              {Array.from({length: 8}).map((_, colIndex) => {
-                const i = rowIndex * 8 + colIndex; // Calculate the index for the square
-                const x = colIndex; // Column index
-                const y = rowIndex; // Row index
-                return (
-                  <div
-                    className={`h-[10vh] w-[10vh] ${getCircleBackground(i)}`}
-                    key={i}
-                    onClick={() => handleSquareClick(i)}
-                  >
-                    <Square
-                      active={activePiece === i}
-                      alreadyActive={alreadyActivePiece === i}
-                      id={i}
-                      x={x}
-                      y={y}
-                      lastStart={activePiece === i || lastStart === i}
-                      lastEnd={lastEnd === i}
-                      possible={
-                        activePiece && moves.at(activePiece)?.includes(i)
-                      }
+      <div className="p-4">
+        <div className="flex space-x-2">
+          <Input
+            placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+            className="w-[450px]"
+            value={fenInput}
+            onChange={(e) => setFenInputs(e.target.value)}
+          />
+          <Button onClick={fromFen}>From FEN</Button>
+          <Button onClick={generateLegalMoves}>Generate Legal Moves</Button>
+          <Button
+            variant={sandbox ? "destructive" : "secondary"}
+            onClick={() => setSandbox(!sandbox)}
+          >
+            {sandbox ? "Sandbox On" : "Sandbox off"}
+          </Button>
+        </div>
+        <div className="w-full flex items-center justify-center h-[90vh] flex-row-reverse">
+          <div className=" w-[80vh] h-[80vh] flex flex-col-reverse cursor-pointer">
+            {Array.from({length: 8}).map((_, rowIndex) => (
+              <div className="flex flex-row" key={rowIndex}>
+                {Array.from({length: 8}).map((_, colIndex) => {
+                  const i = rowIndex * 8 + colIndex; // Calculate the index for the square
+                  const x = colIndex; // Column index
+                  const y = rowIndex; // Row index
+                  return (
+                    <div
+                      className={`h-[10vh] w-[10vh] ${getCircleBackground(i)}`}
+                      key={i}
+                      onClick={() => handleSquareClick(i)}
                     >
-                      {board[i] === "" ? null : (
-                        <Piece
-                          id={i + 1}
-                          type={board[i]}
-                          disabled={
-                            !sandbox && !board[i]?.endsWith(friendlyColor)
-                          }
-                        />
-                      )}
-                    </Square>
-                    {/* <div className="relative bottom-5">{i}</div> */}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+                      <Square
+                        active={activePiece === i}
+                        alreadyActive={alreadyActivePiece === i}
+                        id={i}
+                        x={x}
+                        y={y}
+                        lastStart={activePiece === i || lastStart === i}
+                        lastEnd={lastEnd === i}
+                        possible={
+                          activePiece && moves.at(activePiece)?.includes(i)
+                        }
+                      >
+                        {board[i] === "" ? null : (
+                          <Piece
+                            id={i + 1}
+                            type={board[i]}
+                            disabled={
+                              !sandbox && !board[i]?.endsWith(friendlyColor)
+                            }
+                          />
+                        )}
+                      </Square>
+                      {/* <div className="relative bottom-5">{i}</div> */}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </DndContext>
