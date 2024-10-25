@@ -63,7 +63,7 @@ impl MoveGenerator {
         }
     }
     pub fn generate_legal_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
-
+        self.piece_moves.clear();
         self.generate_sliding_moves(squares, precomputed);
     }
 }

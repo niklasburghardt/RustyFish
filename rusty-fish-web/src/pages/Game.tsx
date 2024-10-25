@@ -14,6 +14,8 @@ const Game = () => {
   const [alreadyActivePiece, setAlreadyActivePiece] = useState<number | null>(
     null
   );
+  const [lmCount, setLmCount] = useState<number>(0);
+  const [moves, setMoves] = useState<any>([]);
 
   const [board, setBoard] = useState<Array<string>>([]);
   const [fenInput, setFenInputs] = useState<string>("");
@@ -24,11 +26,17 @@ const Game = () => {
       engine.init();
       setBoard(engine.get_board());
       setEngine(engine);
+      loadAudio();
       console.log("BOARD");
       console.log(engine.get_board());
     };
     initEngine();
   }, []);
+
+  const loadAudio = () => {
+    const audio = new Audio("/sounds/move-self.mp3");
+    const audio2 = new Audio("/sounds/capture.mp3");
+  };
 
   const getBoard = () => {
     setBoard(engine?.get_board() || []);
@@ -47,12 +55,8 @@ const Game = () => {
   };
   function handleDragStart(event: any) {
     const {active} = event;
-    console.log("ACTIVE ID: " + active.id);
+    console.log(moves.at(active.id - 1));
     setActivePiece(active.id - 1);
-  }
-
-  function generateLegalMoves() {
-    engine?.generate_moves();
   }
 
   function handleDragEnd(event: any) {
@@ -99,12 +103,22 @@ const Game = () => {
 
   async function fromFen() {
     console.log("creating from fen");
-    await engine?.set_board_from_fen(fenInput ||
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+    await engine?.set_board_from_fen(
+      fenInput || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
     );
     console.log("success");
     getBoard();
   }
+
+  function generateLegalMoves() {
+    let moves = engine?.generate_moves();
+    setMoves(moves);
+    console.log(moves);
+  }
+
+  const getCircleBackground = (i: number) => {
+    return i % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]";
+  };
 
   return (
     <DndContext
@@ -112,9 +126,14 @@ const Game = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
-      <input className="outline" value={fenInput} onChange={(e) => setFenInputs(e.target.value)} />
+      <input
+        className="outline"
+        value={fenInput}
+        onChange={(e) => setFenInputs(e.target.value)}
+      />
       <button onClick={fromFen}>From FEN</button>
       <button onClick={generateLegalMoves}>Generate Legal Moves</button>
+      <div className="text-center">{lmCount}</div>
       <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
         <div className=" w-[80vh] h-[80vh] flex flex-col-reverse">
           {Array.from({length: 8}).map((_, rowIndex) => (
@@ -125,7 +144,7 @@ const Game = () => {
                 const y = rowIndex; // Row index
                 return (
                   <div
-                    className="h-[10vh] w-[10vh]"
+                    className={`h-[10vh] w-[10vh] ${getCircleBackground(i)}`}
                     key={i}
                     onClick={() => handleSquareClick(i)}
                   >
@@ -137,12 +156,15 @@ const Game = () => {
                       y={y}
                       lastStart={activePiece === i || lastStart === i}
                       lastEnd={lastEnd === i}
-                      possible={activePiece !== null && i % 5 === 0}
+                      possible={
+                        activePiece && moves.at(activePiece)?.includes(i)
+                      }
                     >
                       {board[i] === "" ? null : (
                         <Piece id={i + 1} type={board[i]} />
                       )}
                     </Square>
+                    <div className="relative bottom-5">{i}</div>
                   </div>
                 );
               })}

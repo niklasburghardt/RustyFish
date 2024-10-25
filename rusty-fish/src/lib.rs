@@ -1,5 +1,8 @@
 mod engine;
 mod utils;
+
+use std::collections::HashMap;
+use std::iter::Map;
 use crate::engine::board::Board;
 use crate::utils::board_representation;
 use crate::engine::piece::Piece;
@@ -13,7 +16,7 @@ use crate::engine::position::position_from_fen;
 pub fn main () {
     let mut c = ChessEngine::new();
     c.init();
-    c.set_board_from_fen("rrrr");
+    c.set_board_from_fen("q");
     let mut count = 0;
     for piece in c.board.squares.iter() {
         if *piece != Piece::None {
@@ -64,8 +67,29 @@ impl ChessEngine {
         br
     }
 
-    pub fn generate_moves(&mut self) {
+    pub fn generate_moves(&mut self) -> JsValue {
         self.board.generate_moves();
+        let mut export: HashMap<u8, Vec<u8>> = HashMap::new();
+        let mut export_vec: Vec<Vec<u8>> = vec![];
+        for pm in self.board.move_generator.piece_moves.iter() {
+            let start = pm.start;
+            let end = pm.end;
+            if export.contains_key(&start) {
+                export.get_mut(&start).unwrap().push(end);
+            } else {
+                export.insert(start, vec![end]);
+            }
+        }
+        for i in 0..64 {
+            if export.contains_key(&i) {
+                export_vec.push(export.get(&i).unwrap().clone());
+            } else {
+                export_vec.push(vec![]);
+            }
+        }
+        JsValue::from_serde(&export_vec).unwrap()
+
+
     }
 
     pub fn set_board_from_fen(&mut self, fen: &str) {

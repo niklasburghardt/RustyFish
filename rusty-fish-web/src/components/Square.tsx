@@ -37,12 +37,25 @@ function Square({
     return "bg-[#b58863]";
   };
 
+  const getCircleBackground = () => {
+    return (x + y) % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]";
+  };
+
   return (
     <div
       ref={setNodeRef}
-      className={`${getBackgroundColor()} w-[100%] z-20 h-[100%] transition-all duration-100`}
+      className={`${getBackgroundColor()} items-center justify-center  w-[100%] z-10 h-[100%] transition-all duration-100 ${
+        possible && children && "rounded-full"
+      }`}
     >
       {children}
+      {possible && !children && (
+        <div className="flex items-center justify-center w-full h-full">
+          <div
+            className={` w-7 h-7 rounded-full ${getCircleBackground()} opacity-100`}
+          />
+        </div>
+      )}
     </div>
   );
 }
