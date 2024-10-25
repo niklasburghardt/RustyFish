@@ -73,6 +73,10 @@ const Game = () => {
       setAlreadyActivePiece(active.id - 1);
     }
 
+    if (!moves.at(active.id - 1)?.includes(over.id)) {
+      return;
+    }
+
     // If the item is dropped over a container, set it as the parent
     // otherwise reset the parent to `null`
     console.log(event);
@@ -94,11 +98,6 @@ const Game = () => {
   function handleSquareClick(id: number) {
     console.log(activePiece);
     if (activePiece) {
-      engine?.make_move(activePiece, id);
-      getBoard();
-
-      setLastStart(activePiece);
-      setLastEnd(id);
       setActivePiece(null);
     }
   }
@@ -167,7 +166,7 @@ const Game = () => {
                         <Piece id={i + 1} type={board[i]} />
                       )}
                     </Square>
-                    <div className="relative bottom-5">{i}</div>
+                    {/* <div className="relative bottom-5">{i}</div> */}
                   </div>
                 );
               })}

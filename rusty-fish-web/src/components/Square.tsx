@@ -46,7 +46,7 @@ function Square({
       ref={setNodeRef}
       className={`${getBackgroundColor()} items-center justify-center  w-[100%] z-10 h-[100%] transition-all duration-100 ${
         possible && children && "rounded-full"
-      }`}
+      }  `}
     >
       {children}
       {possible && !children && (
