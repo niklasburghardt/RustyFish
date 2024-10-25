@@ -16,6 +16,7 @@ const Game = () => {
   );
   const [lmCount, setLmCount] = useState<number>(0);
   const [moves, setMoves] = useState<any>([]);
+  const [friendlyColor, setFriendlyColor] = useState<string>("w");
 
   const [board, setBoard] = useState<Array<string>>([]);
   const [fenInput, setFenInputs] = useState<string>("");
@@ -55,7 +56,6 @@ const Game = () => {
   };
   function handleDragStart(event: any) {
     const {active} = event;
-
     console.log(moves.at(active.id - 1));
     setActivePiece(active.id - 1);
   }
@@ -137,7 +137,7 @@ const Game = () => {
       <button onClick={generateLegalMoves}>Generate Legal Moves</button>
       <div className="text-center">{lmCount}</div>
       <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
-        <div className=" w-[80vh] h-[80vh] flex flex-col-reverse">
+        <div className=" w-[80vh] h-[80vh] flex flex-col-reverse cursor-pointer">
           {Array.from({length: 8}).map((_, rowIndex) => (
             <div className="flex flex-row" key={rowIndex}>
               {Array.from({length: 8}).map((_, colIndex) => {
@@ -163,7 +163,11 @@ const Game = () => {
                       }
                     >
                       {board[i] === "" ? null : (
-                        <Piece id={i + 1} type={board[i]} />
+                        <Piece
+                          id={i + 1}
+                          type={board[i]}
+                          disabled={!board[i]?.endsWith(friendlyColor)}
+                        />
                       )}
                     </Square>
                     {/* <div className="relative bottom-5">{i}</div> */}
