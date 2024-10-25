@@ -20,6 +20,7 @@ const Game = () => {
 
   const [board, setBoard] = useState<Array<string>>([]);
   const [fenInput, setFenInputs] = useState<string>("");
+  const [sandbox, setSandbox] = useState<boolean>(false);
 
   useEffect(() => {
     const initEngine = async () => {
@@ -73,7 +74,7 @@ const Game = () => {
       setAlreadyActivePiece(active.id - 1);
     }
 
-    if (!moves.at(active.id - 1)?.includes(over.id)) {
+    if (!sandbox && !moves.at(active.id - 1)?.includes(over.id)) {
       return;
     }
 
@@ -135,6 +136,9 @@ const Game = () => {
       />
       <button onClick={fromFen}>From FEN</button>
       <button onClick={generateLegalMoves}>Generate Legal Moves</button>
+      <button onClick={() => setSandbox(!sandbox)}>
+        {sandbox ? "Sandbox On" : "Sandbox off"}
+      </button>
       <div className="text-center">{lmCount}</div>
       <div className="w-full flex items-center justify-center pt-20 flex-row-reverse">
         <div className=" w-[80vh] h-[80vh] flex flex-col-reverse cursor-pointer">
@@ -166,7 +170,9 @@ const Game = () => {
                         <Piece
                           id={i + 1}
                           type={board[i]}
-                          disabled={!board[i]?.endsWith(friendlyColor)}
+                          disabled={
+                            !sandbox && !board[i]?.endsWith(friendlyColor)
+                          }
                         />
                       )}
                     </Square>
