@@ -44,15 +44,15 @@ function Square({
   return (
     <div
       ref={setNodeRef}
-      className={`${getBackgroundColor()} items-center justify-center  w-[100%] z-10 h-[100%] transition-all duration-100 ${
-        possible && children && "rounded-full"
+      className={`${getBackgroundColor()} items-center justify-center  w-[100%] z-10 h-[100%] transition-none duration-50 ease-in-out ${
+        possible && children && "rounded-3xl "
       }  `}
     >
       {children}
       {possible && !children && (
         <div className="flex items-center justify-center w-full h-full">
           <div
-            className={` w-7 h-7 rounded-full ${getCircleBackground()} opacity-100`}
+            className={` w-6 h-6 rounded-full ${getCircleBackground()} opacity-100`}
           />
         </div>
       )}

@@ -121,8 +121,8 @@ const Game = () => {
     console.log(moves);
   }
 
-  const getCircleBackground = (i: number) => {
-    return i % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]";
+  const getCircleBackground = (x: number, y: number) => {
+    return (x + y) % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]"; 
   };
 
   return (
@@ -158,7 +158,7 @@ const Game = () => {
                   const y = rowIndex; // Row index
                   return (
                     <div
-                      className={`h-[10vh] w-[10vh] ${getCircleBackground(i)}`}
+                      className={`h-[10vh] w-[10vh] duration-50 ${getCircleBackground(x, y)}`}
                       key={i}
                       onClick={() => handleSquareClick(i)}
                     >
