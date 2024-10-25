@@ -55,6 +55,7 @@ const Game = () => {
   };
   function handleDragStart(event: any) {
     const {active} = event;
+
     console.log(moves.at(active.id - 1));
     setActivePiece(active.id - 1);
   }
@@ -86,6 +87,7 @@ const Game = () => {
     setActivePiece(null);
     setAlreadyActivePiece(null);
     getBoard();
+    setMoves(engine?.generate_moves());
     console.log(engine?.get_board());
   }
 
@@ -107,6 +109,7 @@ const Game = () => {
       fenInput || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
     );
     console.log("success");
+    setMoves(engine?.generate_moves());
     getBoard();
   }
 
