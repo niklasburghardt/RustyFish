@@ -1,9 +1,10 @@
 use std::cmp::PartialEq;
 use crate::engine::board::Board;
 use crate::engine::piece;
-use crate::engine::piece::{Color, Piece};
-use crate::engine::piece_move::PieceMove;
+use crate::engine::piece::{is_type, Color, Piece};
+use crate::engine::piece_move::{Flag, PieceMove, Promotion};
 use crate::engine::precomputed::Precomputed;
+use crate::utils::board_representation::calculate_distance;
 
 pub struct MoveGenerator {
     pub piece_moves: Vec<PieceMove>,
@@ -62,8 +63,31 @@ impl MoveGenerator {
            i += 1;
         }
     }
+
+    fn generate_king_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
+        let mut i: i8 = 0;
+        for p in squares.iter() {
+            if(p == &Piece::King(self.friendly_color)) {
+                for dir in precomputed.directional_offset.iter() {
+                    let target = i + dir;
+                    if target > 0 && target < 64 {
+                        if piece::is_color(&squares[target as usize], &self.friendly_color) {
+                            continue;
+                        }
+                        if calculate_distance(i as u8, target as u8) > 2 {
+                            continue;
+                        }
+                        self.add_move_if_legal(PieceMove {start: i as u8, end: target as u8, flag: Flag::KingMove, promotion: Promotion::None});
+                    }
+
+                }
+            }
+            i += 1;
+        }
+    }
     pub fn generate_legal_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
         self.piece_moves.clear();
         self.generate_sliding_moves(squares, precomputed);
+        self.generate_king_moves(squares, precomputed);
     }
 }

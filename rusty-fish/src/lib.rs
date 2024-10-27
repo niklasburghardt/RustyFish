@@ -50,10 +50,7 @@ impl ChessEngine {
         for i in 0..64 {
             self.board.squares[i] = Piece::None;
         }
-
-
     }
-
 
     pub fn make_move(&mut self, start: usize, end: usize) {
         self.board.make_move(&PieceMove {start: start as u8, end: end as u8, flag: Flag::None, promotion: Promotion::None});
@@ -88,8 +85,6 @@ impl ChessEngine {
             }
         }
         JsValue::from_serde(&export_vec).unwrap()
-
-
     }
 
     pub fn set_board_from_fen(&mut self, fen: &str) {

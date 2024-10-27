@@ -50,10 +50,7 @@ impl Board {
     }
 
     pub fn generate_moves(&mut self) {
-
-
         self.move_generator.generate_legal_moves(&self.squares, &self.precomputed);
-
     }
 
 

@@ -36,6 +36,10 @@ pub fn is_color(piece: &Piece, color: &Color) -> bool{
     }
 }
 
+pub fn is_type(piece: &Piece, t: &Piece) -> bool {
+    std::mem::discriminant(piece) == std::mem::discriminant(t)
+}
+
 
 
 
