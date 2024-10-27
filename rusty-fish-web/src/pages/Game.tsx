@@ -184,7 +184,6 @@ const Game = () => {
                           />
                         )}
                       </Square>
-                      {/* <div className="relative bottom-5">{i}</div> */}
                     </div>
                   );
                 })}

@@ -1,6 +1,10 @@
+use crate::utils::board_representation::calculate_distance;
+
 pub struct Precomputed {
     pub directional_offset: [i8; 8],
     pub squares_to_edge: [[i8;8]; 64],
+    pub knight_offsets: [i8; 8],
+    pub knight_moves: [[i8;8]; 64],
 }
 
 impl Precomputed {
@@ -33,14 +37,33 @@ impl Precomputed {
             }
         }
     }
+
+    fn calculate_knight_moves(&mut self) {
+        for i in 0..64 {
+            for j in 0..8 {
+                let offset = self.knight_offsets[j];
+                let target = i+offset;
+                if target < 0 || target > 63 {
+                    continue;
+                }
+                if calculate_distance(i as u8, target as u8) != 3 {
+                    continue;
+                }
+                self.knight_moves[i as usize][j] = target;
+            }
+        }
+    }
     pub fn new() -> Precomputed {
         Precomputed {
             directional_offset: [8, -8, -1, 1, 7, 9, -7, -9],
             squares_to_edge: [[0; 8]; 64],
+            knight_offsets: [6, 15, 17, 10, -6, -15, -17, -10],
+            knight_moves: [[-1; 8]; 64],
         }
     }
 
     pub fn init(&mut self) {
         self.calculate_squares_to_edge();
+        self.calculate_knight_moves();
     }
 }
