@@ -95,6 +95,7 @@ const Game = () => {
     setAlreadyActivePiece(null);
     getBoard();
     setMoves(engine?.generate_moves());
+    setFriendlyColor(friendlyColor === "w" ? "b" : "w");
     console.log(engine?.get_board());
   }
 

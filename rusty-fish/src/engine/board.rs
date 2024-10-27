@@ -8,7 +8,6 @@ use crate::engine::precomputed::Precomputed;
 pub struct Board {
     // General information
     pub squares: [Piece; 64],
-    pub moving_player: Color,
     pub friendly_color: Color,
     pub opponent_color: Color,
     pub attacked_squares: u64,
@@ -25,7 +24,6 @@ impl Board {
     pub fn new() -> Board {
         Board {
             squares: [Piece::None; 64],
-            moving_player: Color::White,
             opponent_color: Color::Black,
             friendly_color: Color::White,
             attacked_squares: 0b000,
@@ -49,6 +47,11 @@ impl Board {
         self.squares = pos.squares;
     }
 
+    pub fn switch_players(&mut self) {
+        self.move_generator.switch_players();
+
+    }
+
     pub fn generate_moves(&mut self) {
         self.move_generator.generate_legal_moves(&self.squares, &self.precomputed);
     }
@@ -61,6 +64,7 @@ impl Board {
         let piece = self.squares[piece_move.start as usize].clone();
         self.squares[piece_move.start as usize]  = Piece::None;
         self.squares[piece_move.end as usize]    = piece;
+        self.switch_players();
     }
 
 

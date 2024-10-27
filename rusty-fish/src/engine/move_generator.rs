@@ -4,13 +4,13 @@ use crate::engine::piece;
 use crate::engine::piece::{is_color, is_type, Color, Piece};
 use crate::engine::piece_move::{Flag, PieceMove, Promotion};
 use crate::engine::precomputed::Precomputed;
-use crate::utils::board_representation::calculate_distance;
+use crate::utils::board_representation::{calculate_distance, x_from_index, y_from_index};
 
 pub struct MoveGenerator {
     pub piece_moves: Vec<PieceMove>,
-    is_white_to_move: bool,
-    friendly_color: Color,
-    opponent_color: Color,
+    pub is_white_to_move: bool,
+    pub friendly_color: Color,
+    pub opponent_color: Color,
 }
 
 
@@ -81,6 +81,7 @@ impl MoveGenerator {
                     }
 
                 }
+                break;
             }
             i += 1;
         }
@@ -101,7 +102,38 @@ impl MoveGenerator {
                 self.add_move_if_legal(PieceMove{start: i as u8, end: *target as u8, flag: Flag::None, promotion: Promotion::None});
 
 
+
+        }
+    }
+        }
+
+    fn generate_pawn_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
+        let pre: i8 = match self.is_white_to_move {
+            true => 1,
+            false => -1,
+        };
+        for i in 0..64 {
+            if squares[i] != Piece::Pawn(self.friendly_color) {
+                continue;
             }
+
+            if squares[i+(8*pre) as usize] == Piece::None {
+                self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8 +(8*pre)) as u8, flag: Flag::None, promotion: Promotion::None});
+            }
+            if x_from_index(i as u8) != 0 && is_color(&squares[i+(7*pre) as usize], &self.opponent_color) {
+                self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8 +7*pre) as u8, flag: Flag::None, promotion: Promotion::None});
+            }
+            if x_from_index(i as u8) != 7 && is_color(&squares[i+(9*pre) as usize], &self.opponent_color) {
+                self.add_move_if_legal(PieceMove {start: i as u8, end: (i as i8 +9*pre) as u8, flag: Flag::None, promotion: Promotion::None});
+            }
+            let start_file = match self.is_white_to_move {
+                true => 6,
+                false => 1,
+            };
+            if y_from_index(i as u8) == start_file && squares[i+(16*pre) as usize] == Piece::None {
+                self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8+16*pre) as u8, flag: Flag::DoublePawnPush, promotion: Promotion::None});
+            }
+
         }
     }
     pub fn generate_legal_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
@@ -109,5 +141,13 @@ impl MoveGenerator {
         self.generate_sliding_moves(squares, precomputed);
         self.generate_king_moves(squares, precomputed);
         self.generate_knight_moves(squares, precomputed);
+        self.generate_pawn_moves(squares, precomputed);
+    }
+
+    pub fn switch_players(&mut self) {
+        let fc = self.friendly_color;
+        self.friendly_color = self.opponent_color;
+        self.opponent_color = fc;
+        self.is_white_to_move = self.friendly_color == Color::White;
     }
 }
