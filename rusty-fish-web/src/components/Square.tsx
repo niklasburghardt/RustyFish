@@ -12,6 +12,7 @@ function Square({
   lastStart,
   lastEnd,
   possible,
+  marked,
 }: {
   x: number;
   y: number;
@@ -22,6 +23,7 @@ function Square({
   lastStart: boolean;
   lastEnd: boolean;
   possible: boolean;
+  marked: boolean;
 }) {
   const {isOver, setNodeRef} = useDroppable({
     id: id,
@@ -29,11 +31,15 @@ function Square({
   const getBackgroundColor = () => {
     if (active) {
       return (x + y) % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]";
+    } else if (marked) {
+      return (x + y) % 2 == 0 ? "bg-red-500" : "bg-red-600";
+
     } else if (lastStart || lastEnd) {
       return (x + y) % 2 == 0 ? "bg-[#9e962a]" : "bg-[#ccd46c]";
     } else {
       return (x + y) % 2 == 0 ? "bg-[#b58863]" : "bg-[#f0d9b5]";
     }
+
     return "bg-[#b58863]";
   };
 

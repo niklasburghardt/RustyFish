@@ -16,6 +16,7 @@ const Game = () => {
   const [alreadyActivePiece, setAlreadyActivePiece] = useState<number | null>(
     null
   );
+  const [marked, setMarked] = useState<Array<boolean>>([]);
   const [lmCount, setLmCount] = useState<number>(0);
   const [moves, setMoves] = useState<any>([]);
   const [friendlyColor, setFriendlyColor] = useState<string>("w");
@@ -31,6 +32,9 @@ const Game = () => {
       setBoard(engine.get_board());
       setEngine(engine);
       loadAudio();
+      for (let i = 0; i < 64; i++) {
+        setMarked((prev) => [...prev, false]);
+      }
       console.log("BOARD");
       console.log(engine.get_board());
     };
@@ -126,6 +130,16 @@ const Game = () => {
     return (x + y) % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]"; 
   };
 
+  const handleRightClick = (e: React.MouseEvent, i: number) => {
+    e.preventDefault();
+    console.log("right click at", i);
+    if(marked.at(i) == false) {
+      setMarked([...marked.slice(0, i), true, ...marked.slice(i + 1)]);
+    } else {
+      setMarked([...marked.slice(0, i), false, ...marked.slice(i + 1)]);
+    }
+  };
+
   return (
     <DndContext
       modifiers={[snapCenterToCursor]}
@@ -162,6 +176,7 @@ const Game = () => {
                       className={`h-[10vh] w-[10vh] duration-50 ${getCircleBackground(x, y)}`}
                       key={i}
                       onClick={() => handleSquareClick(i)}
+                      onContextMenu={(e) => handleRightClick(e, i)}
                     >
                       <Square
                         active={activePiece === i}
@@ -169,6 +184,7 @@ const Game = () => {
                         id={i}
                         x={x}
                         y={y}
+                        marked={marked.at(i) == true}
                         lastStart={activePiece === i || lastStart === i}
                         lastEnd={lastEnd === i}
                         possible={
