@@ -11,6 +11,7 @@ pub struct MoveGenerator {
     pub is_white_to_move: bool,
     pub friendly_color: Color,
     pub opponent_color: Color,
+    pub epFile: u8,
 }
 
 
@@ -23,6 +24,7 @@ impl MoveGenerator {
             friendly_color: Color::White,
             opponent_color: Color::Black,
             is_white_to_move: true,
+            epFile: 8,
         }
     }
 
@@ -130,7 +132,7 @@ impl MoveGenerator {
                 true => 6,
                 false => 1,
             };
-            if y_from_index(i as u8) == start_file && squares[i+(16*pre) as usize] == Piece::None {
+            if y_from_index(i as u8) == start_file && squares[i+(16*pre) as usize] == Piece::None && squares[i+(8*pre) as usize] == Piece::None {
                 self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8+16*pre) as u8, flag: Flag::DoublePawnPush, promotion: Promotion::None});
             }
 
