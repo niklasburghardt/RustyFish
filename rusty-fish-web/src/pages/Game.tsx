@@ -35,7 +35,7 @@ const Game = () => {
       for (let i = 0; i < 64; i++) {
         setMarked((prev) => [...prev, false]);
       }
-      console.log("BOARD");
+      console.log("BARD");
       console.log(engine.get_board());
     };
     initEngine();
