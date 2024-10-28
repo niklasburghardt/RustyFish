@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build:wasm && react-scripts build",
     "build:wasm": "cd ../rusty-fish && wasm-pack build --target web --out-dir ../rusty-fish-web/pkg",
     "dev": "npm run build:wasm && npm start",
     "test": "react-scripts test",
