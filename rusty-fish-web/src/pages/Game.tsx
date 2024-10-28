@@ -91,23 +91,29 @@ const Game = () => {
     console.log("BOARD");
 
     if (active.id - 1 === over.id) return;
-    board[over.id] === "" ? playMoveSound() : playCaptureSound();
-    engine?.make_move(active.id - 1, over.id);
-    setLastStart(active.id - 1);
-    setLastEnd(over.id);
+    makeMove(active.id - 1, over.id);
+  }
+
+  function makeMove(start: number, end: number) {
+    board[end] === "" ? playMoveSound() : playCaptureSound();
+    engine?.make_move(start, end);
+    setLastStart(start);
+    setLastEnd(end);
     setActivePiece(null);
     setAlreadyActivePiece(null);
     getBoard();
     setMoves(engine?.generate_moves());
     setFriendlyColor(friendlyColor === "w" ? "b" : "w");
-    console.log(engine?.get_board());
+  }
+
+  function resetMarked() {
+    setMarked([]);
   }
 
   function handleSquareClick(id: number) {
     console.log(activePiece);
-    if (activePiece) {
-      setActivePiece(null);
-    }
+    resetMarked();
+    if (activePiece) makeMove(activePiece, id);
   }
 
   async function fromFen() {
@@ -127,13 +133,13 @@ const Game = () => {
   }
 
   const getCircleBackground = (x: number, y: number) => {
-    return (x + y) % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]"; 
+    return (x + y) % 2 == 0 ? "bg-[#646c44]" : "bg-[#829769]";
   };
 
   const handleRightClick = (e: React.MouseEvent, i: number) => {
     e.preventDefault();
     console.log("right click at", i);
-    if(marked.at(i) == false) {
+    if (marked.at(i) == false) {
       setMarked([...marked.slice(0, i), true, ...marked.slice(i + 1)]);
     } else {
       setMarked([...marked.slice(0, i), false, ...marked.slice(i + 1)]);
@@ -173,7 +179,10 @@ const Game = () => {
                   const y = rowIndex; // Row index
                   return (
                     <div
-                      className={`h-[10vh] w-[10vh] duration-50 ${getCircleBackground(x, y)}`}
+                      className={`h-[10vh] w-[10vh] duration-50 ${getCircleBackground(
+                        x,
+                        y
+                      )}`}
                       key={i}
                       onClick={() => handleSquareClick(i)}
                       onContextMenu={(e) => handleRightClick(e, i)}
