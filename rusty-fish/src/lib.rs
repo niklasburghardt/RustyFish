@@ -13,6 +13,8 @@ use crate::engine::piece::Color;
 use crate::engine::piece::Color::White;
 use crate::engine::position::position_from_fen;
 
+
+// For testing and debugging purposes
 pub fn main () {
     let mut c = ChessEngine::new();
     c.init();
@@ -26,25 +28,29 @@ pub fn main () {
     println!("Test successfull, {}", count)
 }
 
-#[wasm_bindgen]
-pub fn add(left: i32, right: i32) -> i32 {
-    left + right + 1
-}
-
+// using alert in browser
 #[wasm_bindgen]
 extern "C" {
     fn alert(s: &str);
 }
+// This is the engine itself that is going to be accessed from the browser
 #[wasm_bindgen]
 struct ChessEngine {
     board: Board,
 }
+
+// These are all the functions that the end user (the browser)
+// Has access on
 #[wasm_bindgen]
 impl ChessEngine {
+
+    // Constructor for Chess Engine
     pub fn new() -> ChessEngine {
         ChessEngine {board: Board::new()}
     }
 
+    // Initialize the board and the game state
+    // This should only be called when no old data is needed anymore
     pub fn init(&mut self) {
         self.board.init();
         for i in 0..64 {
@@ -52,14 +58,19 @@ impl ChessEngine {
         }
     }
 
+    // make a move TODO: if legal
     pub fn make_move(&mut self, start: usize, end: usize) {
         self.board.make_move(&PieceMove {start: start as u8, end: end as u8, flag: Flag::None, promotion: Promotion::None});
     }
 
+    // Check if white is the moving player
+    // WHITE = TRUE
+    // BLACK = FALSE
     pub fn is_white_to_move(&self) -> bool {
-        self.board.move_generator.friendly_color == White
+        self.board.move_generator.borrow().friendly_color == White
     }
 
+    // returns the board in a state that can be read by our frontend
     pub fn get_board(&self) -> Vec<String> {
         let mut br = vec!();
         for i in 0..64 {
@@ -68,11 +79,12 @@ impl ChessEngine {
         br
     }
 
+    // generates all the legal moves and returns a format the browser understands
     pub fn generate_moves(&mut self) -> JsValue {
         self.board.generate_moves();
         let mut export: HashMap<u8, Vec<u8>> = HashMap::new();
         let mut export_vec: Vec<Vec<u8>> = vec![];
-        for pm in self.board.move_generator.piece_moves.iter() {
+        for pm in self.board.move_generator.borrow().piece_moves.iter() {
             let start = pm.start;
             let end = pm.end;
             if export.contains_key(&start) {
@@ -91,6 +103,7 @@ impl ChessEngine {
         JsValue::from_serde(&export_vec).unwrap()
     }
 
+    // sets the board from a given fen string
     pub fn set_board_from_fen(&mut self, fen: &str) {
         let pos = position_from_fen(fen);
         self.board.squares = pos.squares;

@@ -31,8 +31,9 @@ impl MoveGenerator {
     fn add_move_if_legal(&mut self, piece_move: PieceMove) {
         self.piece_moves.push(piece_move);
     }
-
-    fn generate_sliding_piece_moves(&mut self,  squares: &[Piece; 64], precomputed: &Precomputed, index: u8, startDir: u8, endDir: u8) {
+    fn generate_sliding_piece_moves(&mut self, board: &Board, index: u8, startDir: u8, endDir: u8) {
+        let squares = &board.squares;
+        let precomputed = &board.precomputed;
         for i in startDir..endDir {
             let direction = precomputed.directional_offset[i as usize];
             let squares_to_edge = precomputed.squares_to_edge[index as usize][i as usize];
@@ -51,14 +52,14 @@ impl MoveGenerator {
 
     }
 
-    fn generate_sliding_moves(&mut self,  squares: &[Piece; 64], precomputed: &Precomputed) {
+    fn generate_sliding_moves(&mut self, board: &Board) {
         let mut i: u8 = 0;
-        for piece in squares.iter() {
+        for piece in board.squares.iter() {
             match piece {
 
-                Piece::Rook(c) if c == self.friendly_color => self.generate_sliding_piece_moves(&squares, &precomputed, i, 0, 4),
-                Piece::Bishop(c) if c == self.friendly_color => self.generate_sliding_piece_moves(&squares, &precomputed, i, 4, 8),
-                Piece::Queen(c) if c == self.friendly_color => self.generate_sliding_piece_moves(&squares, &precomputed, i, 0, 8),
+                Piece::Rook(c) if c == self.friendly_color => self.generate_sliding_piece_moves(board, i, 0, 4),
+                Piece::Bishop(c) if c == self.friendly_color => self.generate_sliding_piece_moves(board, i, 4, 8),
+                Piece::Queen(c) if c == self.friendly_color => self.generate_sliding_piece_moves(board, i, 0, 8),
                 _ => (),
 
             }
@@ -66,14 +67,14 @@ impl MoveGenerator {
         }
     }
 
-    fn generate_king_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
+    fn generate_king_moves(&mut self, board: &Board) {
         let mut i: i8 = 0;
-        for p in squares.iter() {
+        for p in board.squares.iter() {
             if(p == &Piece::King(self.friendly_color)) {
-                for dir in precomputed.directional_offset.iter() {
+                for dir in board.precomputed.directional_offset.iter() {
                     let target = i + dir;
                     if target > 0 && target < 64 {
-                        if piece::is_color(&squares[target as usize], &self.friendly_color) {
+                        if piece::is_color(&board.squares[target as usize], &self.friendly_color) {
                             continue;
                         }
                         if calculate_distance(i as u8, target as u8) > 2 {
@@ -89,16 +90,16 @@ impl MoveGenerator {
         }
     }
 
-    fn generate_knight_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
+    fn generate_knight_moves(&mut self, board: &Board) {
         for i in 0..64 {
-            if squares[i] != Piece::Knight(self.friendly_color) {
+            if board.squares[i] != Piece::Knight(self.friendly_color) {
                 continue;
             }
-            for target in precomputed.knight_moves[i].iter(){
+            for target in board.precomputed.knight_moves[i].iter(){
                 if *target == -1 {
                     continue
                 }
-                if is_color(&squares[*target as usize], &self.friendly_color) {
+                if is_color(&board.squares[*target as usize], &self.friendly_color) {
                     continue;
                 }
                 self.add_move_if_legal(PieceMove{start: i as u8, end: *target as u8, flag: Flag::None, promotion: Promotion::None});
@@ -109,7 +110,8 @@ impl MoveGenerator {
     }
         }
 
-    fn generate_pawn_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
+    fn generate_pawn_moves(&mut self, board: &Board) {
+        let squares = &board.squares;
         let pre: i8 = match self.is_white_to_move {
             true => 1,
             false => -1,
@@ -138,12 +140,12 @@ impl MoveGenerator {
 
         }
     }
-    pub fn generate_legal_moves(&mut self, squares: &[Piece; 64], precomputed: &Precomputed) {
+    pub fn generate_legal_moves(&mut self, board: &Board) {
         self.piece_moves.clear();
-        self.generate_sliding_moves(squares, precomputed);
-        self.generate_king_moves(squares, precomputed);
-        self.generate_knight_moves(squares, precomputed);
-        self.generate_pawn_moves(squares, precomputed);
+        self.generate_sliding_moves(board);
+        self.generate_king_moves(board);
+        self.generate_knight_moves(board);
+        self.generate_pawn_moves(board);
     }
 
     pub fn switch_players(&mut self) {

@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::ptr::copy;
 use crate::engine::move_generator::MoveGenerator;
 use crate::engine::piece::{Color, Piece};
@@ -16,7 +17,7 @@ pub struct Board {
     pub whiteQueenCastle: bool,
     pub blackKingCastle: bool,
     pub blackQueenCastle: bool,
-    pub move_generator: MoveGenerator,
+    pub move_generator: RefCell<MoveGenerator>,
     pub precomputed: Precomputed,
 }
 
@@ -32,7 +33,7 @@ impl Board {
             whiteQueenCastle: false,
             blackKingCastle: false,
             blackQueenCastle: false,
-            move_generator: MoveGenerator::new(),
+            move_generator: RefCell::from(MoveGenerator::new()),
             precomputed: Precomputed::new(),
         }
     }
@@ -48,12 +49,13 @@ impl Board {
     }
 
     pub fn switch_players(&mut self) {
-        self.move_generator.switch_players();
+        self.move_generator.borrow_mut().switch_players();
 
     }
 
-    pub fn generate_moves(&mut self) {
-        self.move_generator.generate_legal_moves(&self.squares, &self.precomputed);
+    pub fn generate_moves(&self) {
+
+        self.move_generator.borrow_mut().generate_legal_moves(self);
     }
 
 

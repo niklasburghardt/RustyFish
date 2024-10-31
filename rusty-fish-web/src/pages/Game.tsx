@@ -29,14 +29,15 @@ const Game = () => {
     const initEngine = async () => {
       const engine = await ChessEngine.new();
       engine.init();
-      setBoard(engine.get_board());
       setEngine(engine);
+      setBoard(engine.get_board());
       loadAudio();
       for (let i = 0; i < 64; i++) {
         setMarked((prev) => [...prev, false]);
       }
       console.log("BARD");
       console.log(engine.get_board());
+      
     };
     initEngine();
   }, []);
@@ -111,9 +112,7 @@ const Game = () => {
   }
 
   function handleSquareClick(id: number) {
-    console.log(activePiece);
-    resetMarked();
-    if (activePiece) makeMove(activePiece, id);
+  
   }
 
   async function fromFen() {
