@@ -1,5 +1,5 @@
 import React, {act, useEffect, useState} from "react";
-import {add, greet, ChessEngine} from "rusty-fish";
+import {greet, ChessEngine} from "rusty-fish";
 import Square from "../components/Square";
 import Piece from "../components/Piece";
 import {DndContext, DragOverlay} from "@dnd-kit/core";

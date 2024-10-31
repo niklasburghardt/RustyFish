@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import init, {add} from "rusty-fish";
+import init  from "rusty-fish";
 import Game from "./pages/Game";
 import {DndContext} from "@dnd-kit/core";
 

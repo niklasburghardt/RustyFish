@@ -46,7 +46,7 @@ impl Precomputed {
                 if target < 0 || target > 63 {
                     continue;
                 }
-                if calculate_distance(i as u8, target as u8) != 3 {
+                if calculate_distance(i as i8, target as i8) != 3 {
                     continue;
                 }
                 self.knight_moves[i as usize][j] = target;

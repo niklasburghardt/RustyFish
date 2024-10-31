@@ -1,5 +1,6 @@
 use crate::engine::precomputed::Precomputed;
-
+#[derive(Eq, PartialEq)]
+#[derive(Clone)]
 pub enum Flag {
     None,
     EP,
@@ -10,6 +11,7 @@ pub enum Flag {
     KingMove,
 }
 
+#[derive(Clone)]
 pub enum Promotion {
     None,
     Knight,
@@ -19,14 +21,31 @@ pub enum Promotion {
 }
 
 pub struct PieceMove {
-    pub start: u8,
-    pub end: u8,
+    pub start: i8,
+    pub end: i8,
     pub flag: Flag,
     pub promotion: Promotion,
 }
 
 impl PieceMove {
-    pub fn simple(start: u8, end: u8) -> PieceMove {
+    pub fn none() -> PieceMove {
+        PieceMove {
+            start: 0,
+            end: 0,
+            flag: Flag::None,
+            promotion: Promotion::None
+        }
+    }
+
+    pub fn clone(&self) -> PieceMove {
+        PieceMove {
+            start: self.start,
+            end: self.end,
+            flag: self.flag.clone(),
+            promotion: self.promotion.clone(),
+        }
+    }
+    pub fn simple(start: i8, end: i8) -> PieceMove {
         PieceMove {
             start,
             end,

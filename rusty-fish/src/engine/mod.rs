@@ -5,6 +5,7 @@ pub mod game;
 pub mod position;
 mod move_generator;
 mod precomputed;
+mod game_state;
 
 
 

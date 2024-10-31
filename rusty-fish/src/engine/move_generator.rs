@@ -11,7 +11,7 @@ pub struct MoveGenerator {
     pub is_white_to_move: bool,
     pub friendly_color: Color,
     pub opponent_color: Color,
-    pub epFile: u8,
+    pub epFile: i8,
 }
 
 
@@ -31,7 +31,7 @@ impl MoveGenerator {
     fn add_move_if_legal(&mut self, piece_move: PieceMove) {
         self.piece_moves.push(piece_move);
     }
-    fn generate_sliding_piece_moves(&mut self, board: &Board, index: u8, startDir: u8, endDir: u8) {
+    fn generate_sliding_piece_moves(&mut self, board: &Board, index: i8, startDir: i8, endDir: i8) {
         let squares = &board.squares;
         let precomputed = &board.precomputed;
         for i in startDir..endDir {
@@ -42,7 +42,7 @@ impl MoveGenerator {
                 if piece::is_color(&squares[target_square as usize], &self.friendly_color) {
                     break;
                 }
-                self.add_move_if_legal(PieceMove::simple(index, target_square as u8));
+                self.add_move_if_legal(PieceMove::simple(index, target_square as i8));
                 if piece::is_color(&squares[target_square as usize], &self.opponent_color) {
                     break;
                 }
@@ -53,7 +53,7 @@ impl MoveGenerator {
     }
 
     fn generate_sliding_moves(&mut self, board: &Board) {
-        let mut i: u8 = 0;
+        let mut i: i8 = 0;
         for piece in board.squares.iter() {
             match piece {
 
@@ -77,10 +77,10 @@ impl MoveGenerator {
                         if piece::is_color(&board.squares[target as usize], &self.friendly_color) {
                             continue;
                         }
-                        if calculate_distance(i as u8, target as u8) > 2 {
+                        if calculate_distance(i as i8, target as i8) > 2 {
                             continue;
                         }
-                        self.add_move_if_legal(PieceMove {start: i as u8, end: target as u8, flag: Flag::KingMove, promotion: Promotion::None});
+                        self.add_move_if_legal(PieceMove {start: i as i8, end: target as i8, flag: Flag::KingMove, promotion: Promotion::None});
                     }
 
                 }
@@ -102,7 +102,7 @@ impl MoveGenerator {
                 if is_color(&board.squares[*target as usize], &self.friendly_color) {
                     continue;
                 }
-                self.add_move_if_legal(PieceMove{start: i as u8, end: *target as u8, flag: Flag::None, promotion: Promotion::None});
+                self.add_move_if_legal(PieceMove{start: i as i8, end: *target as i8, flag: Flag::None, promotion: Promotion::None});
 
 
 
@@ -122,20 +122,20 @@ impl MoveGenerator {
             }
 
             if squares[i+(8*pre) as usize] == Piece::None {
-                self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8 +(8*pre)) as u8, flag: Flag::None, promotion: Promotion::None});
+                self.add_move_if_legal(PieceMove{start: i as i8, end: (i as i8 +(8*pre)) as i8, flag: Flag::None, promotion: Promotion::None});
             }
-            if x_from_index(i as u8) != 0 && is_color(&squares[i+(7*pre) as usize], &self.opponent_color) {
-                self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8 +7*pre) as u8, flag: Flag::None, promotion: Promotion::None});
+            if x_from_index(i as i8) != 0 && is_color(&squares[i+(7*pre) as usize], &self.opponent_color) {
+                self.add_move_if_legal(PieceMove{start: i as i8, end: (i as i8 +7*pre) as i8, flag: Flag::None, promotion: Promotion::None});
             }
-            if x_from_index(i as u8) != 7 && is_color(&squares[i+(9*pre) as usize], &self.opponent_color) {
-                self.add_move_if_legal(PieceMove {start: i as u8, end: (i as i8 +9*pre) as u8, flag: Flag::None, promotion: Promotion::None});
+            if x_from_index(i as i8) != 7 && is_color(&squares[i+(9*pre) as usize], &self.opponent_color) {
+                self.add_move_if_legal(PieceMove {start: i as i8, end: (i as i8 +9*pre) as i8, flag: Flag::None, promotion: Promotion::None});
             }
             let start_file = match self.is_white_to_move {
                 true => 6,
                 false => 1,
             };
-            if y_from_index(i as u8) == start_file && squares[i+(16*pre) as usize] == Piece::None && squares[i+(8*pre) as usize] == Piece::None {
-                self.add_move_if_legal(PieceMove{start: i as u8, end: (i as i8+16*pre) as u8, flag: Flag::DoublePawnPush, promotion: Promotion::None});
+            if y_from_index(i as i8) == start_file && squares[i+(16*pre) as usize] == Piece::None && squares[i+(8*pre) as usize] == Piece::None {
+                self.add_move_if_legal(PieceMove{start: i as i8, end: (i as i8+16*pre) as i8, flag: Flag::DoublePawnPush, promotion: Promotion::None});
             }
 
         }

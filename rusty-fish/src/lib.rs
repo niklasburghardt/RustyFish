@@ -60,7 +60,7 @@ impl ChessEngine {
 
     // make a move TODO: if legal
     pub fn make_move(&mut self, start: usize, end: usize) {
-        self.board.make_move(&PieceMove {start: start as u8, end: end as u8, flag: Flag::None, promotion: Promotion::None});
+        self.board.make_move(PieceMove {start: start as i8, end: end as i8, flag: Flag::None, promotion: Promotion::None});
     }
 
     // Check if white is the moving player
@@ -82,8 +82,8 @@ impl ChessEngine {
     // generates all the legal moves and returns a format the browser understands
     pub fn generate_moves(&mut self) -> JsValue {
         self.board.generate_moves();
-        let mut export: HashMap<u8, Vec<u8>> = HashMap::new();
-        let mut export_vec: Vec<Vec<u8>> = vec![];
+        let mut export: HashMap<i8, Vec<i8>> = HashMap::new();
+        let mut export_vec: Vec<Vec<i8>> = vec![];
         for pm in self.board.move_generator.borrow().piece_moves.iter() {
             let start = pm.start;
             let end = pm.end;

@@ -40,6 +40,14 @@ pub fn is_type(piece: &Piece, t: &Piece) -> bool {
     std::mem::discriminant(piece) == std::mem::discriminant(t)
 }
 
+pub fn is_piece(piece: &Piece) -> bool {
+    match piece {
+        Piece::None => false,
+        _ => true,
+    }
+}
+
+
 
 
 
